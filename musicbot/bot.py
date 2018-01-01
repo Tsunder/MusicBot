@@ -299,6 +299,27 @@ class MusicBot(discord.Client):
 
             else:
                 log.warning("Invalid channel thing: {}".format(channel))
+   
+    async def on_member_update(self, before, after):
+        if not self.config.set_streaming_role:
+            return
+        streaming_role = None
+        for r in after.server.roles:
+            if r.name.lower() == "streaming":
+                streaming_role = r
+                break
+        if not streaming_role:
+            return
+        if (after.game and after.game.type == 1
+                and streaming_role not in after.roles):
+            await self.add_roles(after, streaming_role)
+            #_log.info("Gave user %s on server %s streaming role", after,
+             #       after.server)
+        elif ((not after.game or after.game.type != 1)
+                and streaming_role in after.roles):
+            await self.remove_roles(after, streaming_role)
+            #_log.info("Removed streaming role for user %s on server %s", after,
+             #       after.server)
 
     async def _wait_delete_msg(self, message, after):
         await asyncio.sleep(after)
