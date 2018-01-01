@@ -301,8 +301,8 @@ class MusicBot(discord.Client):
                 log.warning("Invalid channel thing: {}".format(channel))
    
     async def on_member_update(self, before, after):
-        if not self.config.SetStreamingRole:
-        return
+        if not self.config.set_streaming_role:
+            return
         streaming_role = None
         for r in after.server.roles:
             if r.name.lower() == "streaming":
