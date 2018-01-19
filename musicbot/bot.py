@@ -303,6 +303,8 @@ class MusicBot(discord.Client):
     async def on_member_update(self, before, after):
         if not self.config.set_streaming_role:
             return
+        if after.bot:
+            return
         streaming_role = None
         for r in after.server.roles:
             if r.name.lower() == "streaming":
